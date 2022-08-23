@@ -1,0 +1,267 @@
+db.country.insert(
+{
+	"_id" : "CO004",
+	"name" : "Egypt",
+	"continental" : "Africa",
+	"fifa_rank" : "45",
+	"group_num" : "A",
+	"stuff" : [
+		{
+			"head_coach" : "Takeshi Okada"
+		},
+		[
+			{
+				"coach" : "Javier Aguirre"
+			}
+		]
+	]
+}
+)
+db.country.deleteOne({stuff:{"coach"}} )
+
+db.country.remove(
+{"_id":"CO004"}
+)
+
+db.country.find(
+{$and:[
+  {group_num:"B"},
+  {continental:"Europe"}
+  ]}
+).pretty();
+
+db.players.find(
+{
+  playerInfo:{
+  $elemMatch:{
+    playerID:"PL0013"
+  }
+}
+}
+).pretty();
+
+db.players.find(
+{_id:"PL001"},
+{playerInfo:{
+  $elemMatch:{{ $elemMatch: { playerID:"PL0013" }}}}}
+)
+
+db.players.find(
+{_id:"PL001"},
+{
+playerInfo:{}
+}
+)
+
+db.players.find(
+{_id:"PL001"},
+{playerID:{$elemMatch: {playerID: "PL002"}}}
+)
+
+db.players.find({name: "TOSHIDA Maya"})
+
+db.players.find(
+{playerInfo:
+  {$elemMatch:{:{}}}}
+)
+
+db.players.find(
+{"playerInfo.323":{}}
+)
+
+
+db.players.remove(
+{countryID:"CO001"},
+{
+justOne:{playerInfo:
+{{323:{ }}}
+}
+)
+
+db.players.aggregate(
+{$unwind:'$playerInfo.{}'},
+{$group:{_id:"$_id", length:{$sum:1}}}
+);
+
+db.players.aggregate([{
+  $match: {
+    "playerInfo": { "name": "Yoshida MAYA" }
+  }
+}]).pretty()
+
+db.players.aggregate([{$unwind:"$playerID"}]).pretty()
+
+db.players.find(
+{$or:[
+  {_id:"PL001"},
+  {_id:"PL006"}
+  ]}
+).pretty();
+
+
+db.groups.find({group_num:"A"}).pretty();
+
+db.groups.find({group_num:"B"},
+{matches:
+				{
+					$elemMatch:{home_team:"CO009"}
+					}}
+	).pretty();
+
+	db.players.find({countryID:"CO001"},
+	{playerInfo:
+					{
+						$elemMatch:{name:"KAWASHIMA Eiji"}
+						}}
+		).pretty();
+
+		db.groups.update({group_num:"B"},
+		{matches:
+						{
+							$push:{home_team_colour:"red"}
+							}}
+			).pretty();
+			db.groups.update({group_num:"B"},
+			{matches:
+							{name:3}},
+								{$push:{home_team_colour:"red"}}
+				)
+db.groups.update({group_num:"B"},
+	{matches:{name:35}},
+	{
+		$set: {home_team_colour:"red"}
+	}
+)
+db.groups.insert(
+				{
+					"group_num" : "B",
+					"1st" : "CO010",
+					"2nd" : "CO009",
+					"matches" : [
+						{
+							"name" : 3,
+							"type" : "group",
+							"home_team" : "CO009",
+							"away_team" : "CO010",
+							"home_result" : 3,
+							"away_result" : 3,
+							"score_player" : [ ],
+							"date" : "2018-06-15T21:00:00+03:00",
+							"stadium" : "ST11"
+						},
+						{
+							"name" : 4,
+							"type" : "group",
+							"home_team" : "CO008",
+							"away_team" : "CO003",
+							"home_result" : 0,
+							"away_result" : 1,
+							"score_player" : [ ],
+							"date" : "2018-06-15T18:00:00+03:00",
+							"stadium" : "ST3"
+						},
+						{
+							"name" : 19,
+							"type" : "group",
+							"home_team" : "CO009",
+							"away_team" : "CO008",
+							"home_result" : 1,
+							"away_result" : 0,
+							"score_player" : [ ],
+							"date" : "2018-06-20T15:00:00+03:00",
+							"stadium" : "ST4"
+						},
+						{
+							"name" : 20,
+							"type" : "group",
+							"home_team" : "CO003",
+							"away_team" : "CO010",
+							"home_result" : 0,
+							"away_result" : 1,
+							"score_player" : [ ],
+							"date" : "2018-06-20T21:00:00+03:00",
+							"stadium" : "ST5"
+						},
+						{
+							"name" : 35,
+							"type" : "group",
+							"home_team" : "CO003",
+							"away_team" : "CO009",
+							"home_result" : 1,
+							"away_result" : 1,
+							"score_player" : [ ],
+							"date" : "2018-06-25T21:00:00+03:00",
+							"stadium" : "ST9"
+						},
+						{
+							"name" : 36,
+							"type" : "group",
+							"home_team" : "CO010",
+							"away_team" : "CO008",
+							"home_result" : 2,
+							"away_result" : 2,
+							"score_player" : [ ],
+							"date" : "2018-06-25T20:00:00+02:00",
+							"stadium" : "ST4"
+						}
+					]
+				}
+)
+
+
+db.groups.update(
+{group_num:"B"},
+{matches:
+	{name:3},
+		{$push:{home_team_colour:"red"}}
+)
+db.groups.update(
+	{group_num:"B"},
+	{$set:{"matches.1.score_player":{"Cristiano"}}}
+)
+
+db.groups.find(
+	{$or:[{$and:[{"1st":"CO007"},{"1nd":"CO009"}]},
+				{$and:[{"2st":"CO009"},{"2nd":"CO007"}]}
+	]}
+)
+db.groups.find(
+{$or:[{group_num:"A"},
+			{group_num:"B"}]}
+).pretty();
+
+
+db.stadiums.aggregate(
+[{$match:{"stadiums":{}},
+	$group:{_id:"_id", total: {$sum:1}}}}]
+)
+
+db.stadiums.find(
+{_id:"ST"},
+{stadiums.lat:{$gt: 50}}
+)
+
+
+db.stadiums.find({
+	stadiums:{
+		$elemMatch:{lat:{$gt:53}}
+	}
+}).pretty()
+
+db.groups.update({_id:"ST"},
+{$set: {"stadiums.0.today":{1}}})
+
+
+
+db.stadiums.aggregate(
+{$match:stadiums},
+{
+[
+	{$and:[{$gte;["$lat",50]},
+					{$gte:["$lng", 40]}]}
+]
+}
+)
+
+db.stadiums.update({"_id": [ObjectId("5dcc1679899f2e0ee4b013e6")]}
+,{$push:{_id:"ST"}})

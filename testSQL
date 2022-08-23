@@ -1,0 +1,6 @@
+db.player.update(
+{_id: "JI001"},
+{
+  $push:{matches:{score_player:{"seo"}}}
+}
+)
